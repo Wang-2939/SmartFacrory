@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:tx="http://www.springframework.org/schema/tx"   
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+        http://www.springframework.org/schema/mvc 
+        http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+
+        <!--配置spring容器扫描的基础包  -->
+        <context:component-scan base-package="com.xunteng">
+           <!--不扫描控制器，控制器属于表示层，没有层依赖它  -->
+           <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        </context:component-scan>
+        
+        <aop:aspectj-autoproxy  proxy-target-class="true" ></aop:aspectj-autoproxy>
+        
+        
+        <!--调用外部properties文件，目的：为了使用此文件中的数据库连接信息  -->
+        <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+          <!--配置properties文件位置  -->
+          <property name="location" value="classpath:database.properties"></property>
+        </bean>
+        
+        
+        <!--在spring中配置C3P0数据源，此数据源带有连接池  -->
+        <!--配置bean标签也能将配置的类注入到Spring IoC容器中  -->
+        <bean  id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+          <!--   配置数据源的属性  -->           
+            <property name="jdbcUrl" value="${url}"></property>   
+            <property name="driverClass" value="${driver}"></property>       
+            <property name="user" value="${user}"></property>
+            <property name="password" value="${password}"></property>
+        </bean> 
+       
+   
+        
+        <!--配置SessionFactory，让spring Ioc容器管理SessionFactory，让容器打开会话和关闭会话  -->
+        <!--配置bean标签，将SessionFactory注入到Spring IoC容器中  -->
+        <bean id="sqlSessionFactory"  class="org.mybatis.spring.SqlSessionFactoryBean">
+           <!--配置数据源  -->
+           <property name="dataSource" ref="dataSource"></property>
+           <!--配置mybatis配置文件的位置  -->
+           <property name="configLocation" value="classpath:mybatis-config.xml"></property>
+        </bean>
+        
+        <!--扫描所有的映射器，只有扫描到的映射器，才能注入到spring容器，就可以自动创建映射器实例了  -->
+        
+        <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+           <!--配置扫描的基础包  -->
+           <property name="basePackage" value="com.xunteng.dao"></property>
+           <!--配置会话工厂的bean -->
+           <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>        
+        </bean>
+        
+        <!--配置事务管理器  -->
+        <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+           <!-- 引用数据源 -->
+           <property name="dataSource" ref="dataSource"></property>
+        </bean>
+        
+        <!-- 启动事务注解 -->
+        <tx:annotation-driven transaction-manager="txManager" proxy-target-class="true"></tx:annotation-driven>
+       
+         
+        
+ </beans>

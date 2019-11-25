@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 定义配置文件的规范，mybatis3.0的规范 -->
+<!DOCTYPE configuration 
+     PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+     "http://mybatis.org/dtd/mybatis-3-config.dtd">
+     
+<!-- 配置文件的根节点 -->
+<configuration>
+   <typeAliases>      
+      <package name="com.xunteng.pojo"/>   
+   </typeAliases> 
+  <mappers>
+     <!-- 添加一个映射器文件,resource属性指定映射器文件的路径 -->
+      <mapper resource="com/xunteng/dao/UserMapper.xml"></mapper>
+		<mapper resource="com/xunteng/dao/RoleMapper.xml"></mapper>
+		
+  </mappers>
+</configuration>     

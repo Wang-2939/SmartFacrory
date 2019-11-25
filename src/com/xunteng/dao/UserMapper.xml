@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 定义映射器文件的映射器规范：Mappper3.0 -->
+<!DOCTYPE mapper PUBLIC "-//mybtis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 映射器文件的根节点,必须设置namespace属性，namespace属性必须保证唯一，与接口名相同 -->
+<mapper namespace="com.xunteng.dao.UserMapper">
+    <!-- 必须设置id属性，id属性必须唯一，与接口中方法名对应-->
+	<!--设置SQL语句所接收的参数类型，通过parameterType属性设置-->
+    <!-- 通过resultType属性设置查询语句的结果类型，如果结果类型为集合，那么不设为集合类型，而是设为集合包含的类型 -->
+  <select id="getUserByNameAndPwd" parameterType="UserInfo" resultType="UserInfo">
+  		select * from UserInfo where name=#{name} and password=#{password}
+  </select>
+  
+  <select id="getUserList" parameterType="UserInfo" resultType="UserInfo">
+  	select *from UserInfo u inner join RoleInfo r on u.roleId=r.roleId
+  	<where>
+  		<if test="name!=null and name!=''">
+  			name like'%'+#{name}+'%'
+  		</if>
+  		<if test="department!=null and department!=''">
+  			and department=#{department}
+  		</if>
+  	</where>
+  	order by userId desc
+  </select>
+  
+  <select id="getUserCount" parameterType="UserInfo" resultType="int">
+  	select count(*)from UserInfo u inner join RoleInfo r on u.roleId=r.roleId
+  	<where>
+  		<if test="name!=null and name!=''">
+  			name like'%'+#{name}+'%'
+  		</if>
+  		<if test="department!=null and department!=''">
+  			and department=#{department}
+  		</if>
+  	</where>
+  </select>
+  
+   <insert id="addUser" parameterType="UserInfo">
+  		insert into UserInfo(name,password,sex,age,post,enteringTime,telephone,department,address,photoUrl,roleId)
+  			values(#{name},#{password},#{sex},#{age},#{post},#{enteringTime},#{telephone},#{department},#{address},#{photoUrl},#{roleId});
+  </insert>
+  
+  <delete id="delUser" parameterType="UserInfo">
+  	delete from UserInfo where userId=#{userId}
+  </delete>
+  
+  <select id="getUserById" parameterType="UserInfo" resultType="UserInfo">
+  		select * from UserInfo where userId=#{userId}
+  </select>
+  
+  <update id="updateUser" parameterType="UserInfo">
+  	update UserInfo set
+  		name=#{name},
+  		age=#{age},
+  		sex=#{sex},
+  		post=#{post},
+  		telephone=#{telephone},
+  		department=#{department},
+  		address=#{address},
+  		roleId=#{roleId}
+  		where userId=#{userId}
+  </update>
+  
+  <update id="updatePwd" parameterType="UserInfo">
+  	update UserInfo set password=#{password} where name=#{name}
+  </update>
+  
+   <select id="getUserByName" parameterType="UserInfo" resultType="int">
+  		select count(*) from UserInfo where name=#{name}
+  </select>
+  
+</mapper>

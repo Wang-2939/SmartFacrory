@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- 定义映射器文件的映射器规范：Mappper3.0 -->
+<!DOCTYPE mapper PUBLIC "-//mybtis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 映射器文件的根节点,必须设置namespace属性，namespace属性必须保证唯一，与接口名相同 -->
+<mapper namespace="com.xunteng.dao.PowerMapper">
+  <!-- 必须设置id属性，id属性必须唯一，与接口中方法名对应-->
+  <!-- 设置SQL语句所接收的参数类型，通过parameterType属性设置 -->
+   <!-- 通过resultType属性设置查询语句的结果类型，如果结果类型为集合，那么不设为集合类型，而是设为集合包含的类型 -->
+  	<select id="getWaterPressure" resultType="WaterPressure">
+  		select top 1 *from WaterPressure order by waterPressureId desc
+
+ 	</select>
+ 	
+ 	<select id="getWaterChart" parameterType="WaterPressure" resultType="WaterPressure">
+  		select *from WaterPressure where convert(varchar(10),insertTime,23)=#{insertTime}
+ 	</select>
+ 	
+ 	<select id="getTransformer" resultType="Transformer">
+  		select *from Transformer
+ 	</select>
+ 	
+ 	<select id="getElectric" parameterType="ElectricInfo" resultType="ElectricInfo">
+  		select *from ElectricInfo e,Transformer t where e.transformerId=t.transformerId and convert(varchar(10),insertTime,23)=#{insertTime}
+  		<if test="transformerId!=0">
+  			and e.transformerId=#{transformerId}
+  		</if>
+ 	</select>
+ 	
+ 	<select id="getGasAlarm" parameterType="GasAlarm" resultType="GasAlarm">
+ 		select alarmType,alarmName,COUNT(*) alarmCount from GasAlarm where CONVERT(varchar(10),insertTime,23)=#{insertTime} 
+ 		group by alarmType,alarmName
+ 	</select>
+ 	
+ 	
+ 	<select id="getGasList" parameterType="GasAlarm" resultType="GasAlarm">
+ 		select*from gasAlarm where CONVERT(varchar(10),insertTime,23)=#{insertTime} 
+ 		order by gasAlarmId desc
+ 	</select>
+		
+ 	<select id="getGasCount" parameterType="GasAlarm" resultType="int">
+ 		select count(*) from GasAlarm where CONVERT(varchar(10),insertTime,23)=#{insertTime} 
+ 	</select>
+</mapper>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 定义映射器文件的映射器规范：Mappper3.0 -->
+<!DOCTYPE mapper PUBLIC "-//mybtis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 映射器文件的根节点,必须设置namespace属性，namespace属性必须保证唯一，与接口名相同 -->
+<mapper namespace="com.xunteng.dao.RoleMapper">
+	<!-- 查询 -->
+    <!-- 必须设置id属性，id属性必须唯一，与接口中方法名对应-->
+	<!--设置SQL语句所接收的参数类型，通过parameterType属性设置-->
+    <!-- 通过resultType属性设置查询语句的结果类型，如果结果类型为集合，那么不设为集合类型，而是设为集合包含的类型 -->
+  <select id="getRole"  resultType="RoleInfo" parameterType="RoleInfo">
+  		select * from RoleInfo
+  </select>
+  <insert id="addRole" parameterType="RoleInfo">
+  	insert into RoleInfo(roleName,delFlage,remark)values(#{roleName},#{delFlage},#{remark})
+  </insert>
+ 
+  <delete id="delRole" parameterType="RoleInfo">
+  	delete from RoleInfo where roleId=#{roleId}
+  	  </delete>
+  
+	<update id="updateRole" parameterType="RoleInfo">
+	update  RoleInfo set roleName=#{roleName},remark=#{remark} where roleId=#{roleId}
+	</update>
+	
+	<select id="getRoleMenu"  resultType="RoleMenu" parameterType="RoleMenu">
+  		select * from RoleMenu where roleId=#{roleId}
+  	</select>  
+  	
+  	<insert id="addRoleMenu"  parameterType="RoleMenu">
+  		insert into RoleMenu(roleId,menuId)values(#{roleId},#{menuId})
+  	</insert>
+  	
+  	<delete id="delRoleMenu"  parameterType="RoleMenu">
+  		delete from RoleMenu where roleId=#{roleId}
+  	</delete>
+  </mapper>

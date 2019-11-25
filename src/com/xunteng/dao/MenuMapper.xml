@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 定义映射器文件的映射器规范：Mappper3.0 -->
+<!DOCTYPE mapper PUBLIC "-//mybtis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 映射器文件的根节点,必须设置namespace属性，namespace属性必须保证唯一，与接口名相同 -->
+<mapper namespace="com.xunteng.dao.MenuMapper">
+    <!-- 必须设置id属性，id属性必须唯一，与接口中方法名对应-->
+	<!--设置SQL语句所接收的参数类型，通过parameterType属性设置-->
+    <!-- 通过resultType属性设置查询语句的结果类型，如果结果类型为集合，那么不设为集合类型，而是设为集合包含的类型 -->
+  <select id="getMenu" parameterType="UserInfo" resultType="MenuInfo">
+  		select d.* from UserInfo a,RoleInfo b,RoleMenu c,MenuInfo d
+		where a.roleId = b.roleId and b.roleId = c.roleId and c.menuId = d.menuId
+		and a.name=#{name}
+		union all
+		select *from MenuInfo where menuType=0
+
+  </select>
+  
+   <select id="getChildMenu" resultType="MenuInfo">
+  		select *from MenuInfo where menuType=1
+
+  </select>
+  
+</mapper>
