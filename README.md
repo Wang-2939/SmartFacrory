@@ -1,4 +1,4 @@
-# SmartFacrory
+# SmartFactory
 Smart Factory Central Management System
 
 Technologies involved: HTML5, CSS3, bootstrap, JavaScript, jQuery, AJAX, spring MVC, spring, mybatis, SQL Server2008, 
